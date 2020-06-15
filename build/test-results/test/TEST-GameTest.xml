@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="GameTest" tests="16" skipped="0" failures="0" errors="0" timestamp="2020-02-12T21:25:10" hostname="SOF-ZHIGEO-MOB" time="0.056">
+  <properties/>
+  <testcase name="placeShipsTest_WhenInvalidFirstField_ShouldReturnFalse" classname="GameTest" time="0.012"/>
+  <testcase name="placeShipsTest_WhenShipOverlapXAxis_ShouldReturnFalse" classname="GameTest" time="0.024"/>
+  <testcase name="addUserTest_WhenMoreThanTwoPlayers_ShouldReturnFalse" classname="GameTest" time="0.001"/>
+  <testcase name="addUserTest_WhenLessThanTwoPlayers_ShouldReturnTrue" classname="GameTest" time="0.0"/>
+  <testcase name="readyTest_WhenBothAreReady_ShouldReturnMessage" classname="GameTest" time="0.003"/>
+  <testcase name="readyTest_WhenBothAreNotReady_ShouldReturnEmptyString" classname="GameTest" time="0.0"/>
+  <testcase name="placeShipsTest_WhenShipDiagonal_ShouldReturnFalse" classname="GameTest" time="0.0"/>
+  <testcase name="placeShipsTest_WhenShipOverlapYAxis_ShouldReturnFalse" classname="GameTest" time="0.0"/>
+  <testcase name="placeShipsTest_WhenInvalidSecondField_ShouldReturnFalse" classname="GameTest" time="0.0"/>
+  <testcase name="placeShipsTest_WhenBoardIsFull_ShouldReturnFalse" classname="GameTest" time="0.0"/>
+  <testcase name="placeShipsTest_WhenShipNull_ShouldReturnFalse" classname="GameTest" time="0.0"/>
+  <testcase name="isPlayerTurn_WhenIsTurn_ShouldReturnTrue" classname="GameTest" time="0.0"/>
+  <testcase name="isPlayerTurn_WhenIsNotTurn_ShouldReturnFalse" classname="GameTest" time="0.0"/>
+  <testcase name="readyTest_WhenOnlyOnePlayer_ShouldReturnEmptyString" classname="GameTest" time="0.0"/>
+  <testcase name="placeShipsTest_WhenShipOverlap_ShouldReturnFalse" classname="GameTest" time="0.001"/>
+  <testcase name="playTest" classname="GameTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

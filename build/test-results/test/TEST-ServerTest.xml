@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ServerTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2020-02-12T21:25:10" hostname="SOF-ZHIGEO-MOB" time="1.109">
+  <properties/>
+  <testcase name="createUsernameTest_ShouldReturnSuccessfulMessage" classname="ServerTest" time="1.051"/>
+  <testcase name="listGamesTest_WhenThereAreGames_ShouldReturnAvailableGames" classname="ServerTest" time="0.015"/>
+  <testcase name="createGameTest_WhenCreated_ShouldReturnSuccessfulMessage" classname="ServerTest" time="0.009"/>
+  <testcase name="joinGamesTest_WhenYouDontHaveGame_ShouldSuccessfulMessage" classname="ServerTest" time="0.008"/>
+  <testcase name="joinGamesTest_WhenYouHaveGame_ShouldReturnHaveGame" classname="ServerTest" time="0.003"/>
+  <testcase name="listGamesTest_WhenThereAreNoGames_ShouldReturnNoGame" classname="ServerTest" time="0.004"/>
+  <testcase name="placeShipTest_WhenNotPlacing_ShouldReturnNotReadyMessage" classname="ServerTest" time="0.002"/>
+  <testcase name="joinGamesTest_WhenRandomGame_ShouldSuccessfulMessage" classname="ServerTest" time="0.007"/>
+  <testcase name="placeShipTest_WhenNoGame_ShouldReturnNotJoinedMessage" classname="ServerTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
