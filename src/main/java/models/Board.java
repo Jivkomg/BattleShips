@@ -23,7 +23,6 @@ public class Board {
     private Field[][] fields;
     private List<Ship> ships;
 
-
     public Board() {
         fields = new Field[BOARD_MAX_SIZE][BOARD_MAX_SIZE];
 
@@ -31,7 +30,7 @@ public class Board {
 
         for (int i = 0; i < BOARD_MAX_SIZE; i++) {
             for (int j = 0; j < BOARD_MAX_SIZE; j++) {
-                fields[i][j] = new Field(i, j);
+                fields[i][j] = new Field();
             }
         }
     }

@@ -86,7 +86,7 @@ public class GameTest {
 
         boardViewByUsername.put(username1, "\n" +
                 "       YOUR BOARD\n" +
-                "   1 2 3 4 5 6 7 8 9 10\n" +
+                "   1 2 3 4 5 6 7 8 9 10" +
                 "\n" +
                 "   _ _ _ _ _ _ _ _ _ _\n" +
                 "A |_|_|_|_|_|_|_|_|_|_|\n" +
@@ -102,7 +102,7 @@ public class GameTest {
                 "\n" +
                 "\n" +
                 "       ENEMY BOARD\n" +
-                "   1 2 3 4 5 6 7 8 9 10\n" +
+                "   1 2 3 4 5 6 7 8 9 10" +
                 "\n" +
                 "   _ _ _ _ _ _ _ _ _ _\n" +
                 "A |O|_|_|_|_|_|_|_|_|_|\n" +
@@ -118,7 +118,7 @@ public class GameTest {
                 "Game Over. Winner is: name1\n");
         boardViewByUsername.put(username2, "\n" +
                 "       YOUR BOARD\n" +
-                "   1 2 3 4 5 6 7 8 9 10\n" +
+                "   1 2 3 4 5 6 7 8 9 10" +
                 "\n" +
                 "   _ _ _ _ _ _ _ _ _ _\n" +
                 "A |O|_|_|_|_|_|_|_|_|_|\n" +
@@ -134,7 +134,7 @@ public class GameTest {
                 "\n" +
                 "\n" +
                 "       ENEMY BOARD\n" +
-                "   1 2 3 4 5 6 7 8 9 10\n" +
+                "   1 2 3 4 5 6 7 8 9 10" +
                 "\n" +
                 "   _ _ _ _ _ _ _ _ _ _\n" +
                 "A |_|_|_|_|_|_|_|_|_|_|\n" +

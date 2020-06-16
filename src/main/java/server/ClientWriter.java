@@ -13,7 +13,7 @@ public class ClientWriter implements Runnable {
     private SocketChannel socketChannel;
     private ByteBuffer buffer = ByteBuffer.allocate(DEFAULT_BUFFER_CAPACITY);
 
-    public ClientWriter(SocketChannel socketChannel) {
+    ClientWriter(SocketChannel socketChannel) {
         this.socketChannel = socketChannel;
     }
 
