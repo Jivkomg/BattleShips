@@ -9,18 +9,27 @@ import java.util.List;
 import static enums.ShipType.*;
 
 public class Board {
-    private final static int BOARD_SIZE = 10;
+    private final static int BOARD_MAX_SIZE = 10;
+    private final static int BOARD_MIN_SIZE = 0;
+    private static final String FIRST_PLAYER_BOARD_MESSAGE = "YOUR BOARD";
+    private static final String SECOND_PLAYER_BOARD_MESSAGE = "ENEMY BOARD";
+    private static final String REGEX = "\\*";
+    private static final char EMPTY_FIELD_TOKEN = '_';
+    private static final char DAMAGED_SHIP_TOKEN = 'X';
+    private static final char UNDAMAGED_SHIP_TOKEN = '*';
+    private static final char MISSED_SHIP_TOKEN = 'O';
+
     private Field[][] fields;
     private List<Ship> ships;
 
 
     public Board() {
-        fields = new Field[BOARD_SIZE][BOARD_SIZE];
+        fields = new Field[BOARD_MAX_SIZE][BOARD_MAX_SIZE];
 
         ships = new ArrayList<>();
 
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            for (int j = 0; j < BOARD_SIZE; j++) {
+        for (int i = 0; i < BOARD_MAX_SIZE; i++) {
+            for (int j = 0; j < BOARD_MAX_SIZE; j++) {
                 fields[i][j] = new Field(i, j);
             }
         }
@@ -123,9 +132,8 @@ public class Board {
     }
 
     private boolean isInvalidField(int x, int y) {
-        return x < 0 || y < 0 || x >= BOARD_SIZE || y >= BOARD_SIZE;
+        return x < BOARD_MIN_SIZE || y < BOARD_MIN_SIZE || x >= BOARD_MAX_SIZE || y >= BOARD_MAX_SIZE;
     }
-
 
     public boolean gameOver() {
         return ships.stream().allMatch(Ship::isSunk);
@@ -133,33 +141,33 @@ public class Board {
 
     public String getBoardView() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("       YOUR BOARD").append("\n  ");
+        stringBuilder.append("       ").append(FIRST_PLAYER_BOARD_MESSAGE).append("\n  ");
 
-        for (int j = 1; j <= BOARD_SIZE; j++) {
+        for (int j = 1; j <= BOARD_MAX_SIZE; j++) {
             stringBuilder.append(" ").append(j);
         }
 
         stringBuilder.append("\n\n  ");
 
-        for (int j = 1; j <= BOARD_SIZE; j++) {
-            stringBuilder.append(" ").append("_");
+        for (int j = 1; j <= BOARD_MAX_SIZE; j++) {
+            stringBuilder.append(" ").append(EMPTY_FIELD_TOKEN);
         }
         stringBuilder.append("\n");
 
-        for (int i = 0; i < BOARD_SIZE; i++) {
+        for (int i = 0; i < BOARD_MAX_SIZE; i++) {
             stringBuilder.append((char) ('A' + i)).append(" |");
-            for (int j = 0; j < BOARD_SIZE; j++) {
+            for (int j = 0; j < BOARD_MAX_SIZE; j++) {
                 Field field = fields[i][j];
                 State state = field.getState();
 
-                char symbol = '_';
+                char symbol = EMPTY_FIELD_TOKEN;
 
                 if (state.equals(State.DAMAGED_SHIP)) {
-                    symbol = 'X';
+                    symbol = DAMAGED_SHIP_TOKEN;
                 } else if (state.equals(State.UNDAMAGED_SHIP)) {
-                    symbol = '*';
+                    symbol = UNDAMAGED_SHIP_TOKEN;
                 } else if (state.equals(State.MISSED_SHIP)) {
-                    symbol = 'O';
+                    symbol = MISSED_SHIP_TOKEN;
                 }
                 stringBuilder.append(symbol).append("|");
             }
@@ -169,8 +177,8 @@ public class Board {
     }
 
     public String getHiddenBoardView() {
-        return getBoardView().replaceAll("\\*", "_")
-                .replace("YOUR BOARD", "ENEMY BOARD");
+        return getBoardView().replaceAll(REGEX, String.valueOf(EMPTY_FIELD_TOKEN))
+                .replace(FIRST_PLAYER_BOARD_MESSAGE, SECOND_PLAYER_BOARD_MESSAGE);
     }
 
     public void play(String move) {
