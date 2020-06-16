@@ -13,15 +13,15 @@ public class Ship {
         this.health = shipType.length;
     }
 
-    public ShipType getShipType() {
+    ShipType getShipType() {
         return shipType;
     }
 
-    public void getHit() {
+    void getHit() {
         health--;
     }
 
-    public boolean isSunk() {
+    boolean isSunk() {
         return health == 0;
     }
 

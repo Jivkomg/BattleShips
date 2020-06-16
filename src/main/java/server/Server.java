@@ -55,7 +55,7 @@ public class Server {
         new Server().start();
     }
 
-    public void start() {
+    private void start() {
         try (Selector selector = Selector.open();
              ServerSocketChannel serverSocketChannel = ServerSocketChannel.open()) {
             serverSocketChannel.bind(new InetSocketAddress(HOST_NAME, HOST_PORT));

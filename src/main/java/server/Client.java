@@ -17,7 +17,7 @@ public class Client extends Thread {
 
     private static final String DISCONNECT_COMMAND = "disconnect";
 
-    public static final int DEFAULT_BUFFER_CAPACITY = 1000;
+    static final int DEFAULT_BUFFER_CAPACITY = 1000;
 
     public static void main(String[] args) {
         new Client().start();

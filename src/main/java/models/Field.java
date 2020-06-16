@@ -10,7 +10,7 @@ public class Field {
     private int yCoordinate;
     private State state;
 
-    public Field(int xCoordinate, int yCoordinate) {
+    Field(int xCoordinate, int yCoordinate) {
         this.ship = null;
         this.state = NO_SHIP;
         this.xCoordinate = xCoordinate;
@@ -18,7 +18,7 @@ public class Field {
     }
 
 
-    public void setShip(Ship ship) {
+    void setShip(Ship ship) {
         this.ship = ship;
         this.state = UNDAMAGED_SHIP;
     }
@@ -39,11 +39,11 @@ public class Field {
         this.yCoordinate = yCoordinate;
     }
 
-    public State getState() {
+    State getState() {
         return state;
     }
 
-    public boolean getHit() {
+    boolean getHit() {
         if (UNDAMAGED_SHIP.equals(state)) {
             ship.getHit();
             state = DAMAGED_SHIP;
