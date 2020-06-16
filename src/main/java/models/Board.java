@@ -11,13 +11,17 @@ import static enums.ShipType.*;
 public class Board {
     private final static int BOARD_MAX_SIZE = 10;
     private final static int BOARD_MIN_SIZE = 0;
+
     private static final String FIRST_PLAYER_BOARD_MESSAGE = "YOUR BOARD";
     private static final String SECOND_PLAYER_BOARD_MESSAGE = "ENEMY BOARD";
+
     private static final String REGEX = "\\*";
     private static final char EMPTY_FIELD_TOKEN = '_';
+    private static final char EMPTY_FIELD_SIDE_TOKEN = '|';
     private static final char DAMAGED_SHIP_TOKEN = 'X';
     private static final char UNDAMAGED_SHIP_TOKEN = '*';
     private static final char MISSED_SHIP_TOKEN = 'O';
+    private static final char FIRST_BOARD_INDEX = 'A';
 
     private Field[][] fields;
     private List<Ship> ships;
@@ -140,6 +144,36 @@ public class Board {
     }
 
     public String getBoardView() {
+        StringBuilder stringBuilder = getEmptyBoardView();
+
+        for (int i = 0; i < BOARD_MAX_SIZE; i++) {
+            stringBuilder.append((char) (FIRST_BOARD_INDEX + i)).append(" ").append(EMPTY_FIELD_SIDE_TOKEN);
+            for (int j = 0; j < BOARD_MAX_SIZE; j++) {
+                Field field = fields[i][j];
+                State state = field.getState();
+
+                char symbol = EMPTY_FIELD_TOKEN;
+
+                switch (state) {
+                    case DAMAGED_SHIP:
+                        symbol = DAMAGED_SHIP_TOKEN;
+                        break;
+                    case UNDAMAGED_SHIP:
+                        symbol = UNDAMAGED_SHIP_TOKEN;
+                        break;
+                    case MISSED_SHIP:
+                        symbol = MISSED_SHIP_TOKEN;
+                        break;
+                }
+
+                stringBuilder.append(symbol).append(EMPTY_FIELD_SIDE_TOKEN);
+            }
+            stringBuilder.append('\n');
+        }
+        return String.valueOf(stringBuilder);
+    }
+
+    private StringBuilder getEmptyBoardView() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("       ").append(FIRST_PLAYER_BOARD_MESSAGE).append("\n  ");
 
@@ -153,27 +187,7 @@ public class Board {
             stringBuilder.append(" ").append(EMPTY_FIELD_TOKEN);
         }
         stringBuilder.append("\n");
-
-        for (int i = 0; i < BOARD_MAX_SIZE; i++) {
-            stringBuilder.append((char) ('A' + i)).append(" |");
-            for (int j = 0; j < BOARD_MAX_SIZE; j++) {
-                Field field = fields[i][j];
-                State state = field.getState();
-
-                char symbol = EMPTY_FIELD_TOKEN;
-
-                if (state.equals(State.DAMAGED_SHIP)) {
-                    symbol = DAMAGED_SHIP_TOKEN;
-                } else if (state.equals(State.UNDAMAGED_SHIP)) {
-                    symbol = UNDAMAGED_SHIP_TOKEN;
-                } else if (state.equals(State.MISSED_SHIP)) {
-                    symbol = MISSED_SHIP_TOKEN;
-                }
-                stringBuilder.append(symbol).append("|");
-            }
-            stringBuilder.append('\n');
-        }
-        return String.valueOf(stringBuilder);
+        return stringBuilder;
     }
 
     public String getHiddenBoardView() {
@@ -182,7 +196,7 @@ public class Board {
     }
 
     public void play(String move) {
-        int xCoordinate = move.toUpperCase().charAt(0) - 'A';
+        int xCoordinate = move.toUpperCase().charAt(0) - FIRST_BOARD_INDEX;
         int yCoordinate = Integer.parseInt(move.substring(1)) - 1;
         fields[xCoordinate][yCoordinate].getHit();
     }
