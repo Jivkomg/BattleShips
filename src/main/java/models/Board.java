@@ -18,9 +18,6 @@ public class Board {
     private static final String REGEX = "\\*";
     private static final char EMPTY_FIELD_TOKEN = '_';
     private static final char EMPTY_FIELD_SIDE_TOKEN = '|';
-    private static final char DAMAGED_SHIP_TOKEN = 'X';
-    private static final char UNDAMAGED_SHIP_TOKEN = '*';
-    private static final char MISSED_SHIP_TOKEN = 'O';
     private static final char FIRST_BOARD_INDEX = 'A';
 
     private Field[][] fields;
@@ -152,17 +149,9 @@ public class Board {
                 Field field = fields[i][j];
                 ShipFieldState shipFieldState = field.getShipFieldState();
 
-                char symbol = EMPTY_FIELD_TOKEN;
+                char token = shipFieldState.getToken();
 
-                if (shipFieldState == ShipFieldState.DAMAGED_SHIP_FIELD) {
-                    symbol = DAMAGED_SHIP_TOKEN;
-                } else if (shipFieldState == ShipFieldState.UNDAMAGED_SHIP_FIELD) {
-                    symbol = UNDAMAGED_SHIP_TOKEN;
-                } else if (shipFieldState == ShipFieldState.MISSED_SHIP_FIELD) {
-                    symbol = MISSED_SHIP_TOKEN;
-                }
-
-                stringBuilder.append(symbol).append(EMPTY_FIELD_SIDE_TOKEN);
+                stringBuilder.append(token).append(EMPTY_FIELD_SIDE_TOKEN);
             }
             stringBuilder.append('\n');
         }
@@ -177,7 +166,7 @@ public class Board {
             stringBuilder.append(" ").append(j);
         }
 
-        stringBuilder.append("\n\n  ");
+        stringBuilder.append("\n  ");
 
         for (int j = 1; j <= BOARD_MAX_SIZE; j++) {
             stringBuilder.append(" ").append(EMPTY_FIELD_TOKEN);

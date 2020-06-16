@@ -17,7 +17,6 @@ public class Field {
         this.yCoordinate = yCoordinate;
     }
 
-
     void setShip(Ship ship) {
         this.ship = ship;
         this.shipFieldState = UNDAMAGED_SHIP_FIELD;
