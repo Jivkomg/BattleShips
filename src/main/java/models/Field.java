@@ -1,18 +1,18 @@
 package models;
 
-import enums.State;
+import enums.ShipFieldState;
 
-import static enums.State.*;
+import static enums.ShipFieldState.*;
 
 public class Field {
     private Ship ship;
     private int xCoordinate;
     private int yCoordinate;
-    private State state;
+    private ShipFieldState shipFieldState;
 
     Field(int xCoordinate, int yCoordinate) {
         this.ship = null;
-        this.state = NO_SHIP;
+        this.shipFieldState = NO_SHIP_FIELD;
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
     }
@@ -20,7 +20,7 @@ public class Field {
 
     void setShip(Ship ship) {
         this.ship = ship;
-        this.state = UNDAMAGED_SHIP;
+        this.shipFieldState = UNDAMAGED_SHIP_FIELD;
     }
 
     public int getxCoordinate() {
@@ -39,18 +39,18 @@ public class Field {
         this.yCoordinate = yCoordinate;
     }
 
-    State getState() {
-        return state;
+    ShipFieldState getShipFieldState() {
+        return shipFieldState;
     }
 
     boolean getHit() {
-        if (UNDAMAGED_SHIP.equals(state)) {
+        if (UNDAMAGED_SHIP_FIELD.equals(shipFieldState)) {
             ship.getHit();
-            state = DAMAGED_SHIP;
+            shipFieldState = DAMAGED_SHIP_FIELD;
             return true;
         }
-        if (!DAMAGED_SHIP.equals(state)) {
-            state = MISSED_SHIP;
+        if (!DAMAGED_SHIP_FIELD.equals(shipFieldState)) {
+            shipFieldState = MISSED_SHIP_FIELD;
         }
         return false;
     }

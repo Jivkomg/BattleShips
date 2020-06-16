@@ -1,7 +1,7 @@
 package models;
 
 import enums.ShipType;
-import enums.State;
+import enums.ShipFieldState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +78,7 @@ public class Board {
         }
 
         for (int i = firstCoordinate; i <= lastCoordinate; i++) {
-            if (!fields[axisCoordinate][i].getState().equals(State.NO_SHIP)) {
+            if (!fields[axisCoordinate][i].getShipFieldState().equals(ShipFieldState.NO_SHIP_FIELD)) {
                 return false;
             }
         }
@@ -106,7 +106,7 @@ public class Board {
         }
 
         for (int i = firstCoordinate; i <= lastCoordinate; i++) {
-            if (!fields[i][axisCoordinate].getState().equals(State.NO_SHIP)) {
+            if (!fields[i][axisCoordinate].getShipFieldState().equals(ShipFieldState.NO_SHIP_FIELD)) {
                 return false;
             }
         }
@@ -150,20 +150,16 @@ public class Board {
             stringBuilder.append((char) (FIRST_BOARD_INDEX + i)).append(" ").append(EMPTY_FIELD_SIDE_TOKEN);
             for (int j = 0; j < BOARD_MAX_SIZE; j++) {
                 Field field = fields[i][j];
-                State state = field.getState();
+                ShipFieldState shipFieldState = field.getShipFieldState();
 
                 char symbol = EMPTY_FIELD_TOKEN;
 
-                switch (state) {
-                    case DAMAGED_SHIP:
-                        symbol = DAMAGED_SHIP_TOKEN;
-                        break;
-                    case UNDAMAGED_SHIP:
-                        symbol = UNDAMAGED_SHIP_TOKEN;
-                        break;
-                    case MISSED_SHIP:
-                        symbol = MISSED_SHIP_TOKEN;
-                        break;
+                if (shipFieldState == ShipFieldState.DAMAGED_SHIP_FIELD) {
+                    symbol = DAMAGED_SHIP_TOKEN;
+                } else if (shipFieldState == ShipFieldState.UNDAMAGED_SHIP_FIELD) {
+                    symbol = UNDAMAGED_SHIP_TOKEN;
+                } else if (shipFieldState == ShipFieldState.MISSED_SHIP_FIELD) {
+                    symbol = MISSED_SHIP_TOKEN;
                 }
 
                 stringBuilder.append(symbol).append(EMPTY_FIELD_SIDE_TOKEN);
