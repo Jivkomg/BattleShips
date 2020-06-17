@@ -73,7 +73,7 @@ public class CommandDistributor {
         return messageForTheUser;
     }
 
-    public List<String> getAllCommands(){
+    public List<String> getAllCommands() {
         return Arrays.asList(USERNAME_COMMAND, CREATE_GAME_COMMAND, JOIN_GAME_COMMAND,
                 LIST_GAMES_COMMAND, PLACE_COMMAND, HIT_COMMAND, START_COMMAND, SAVE_GAMES_COMMAND,
                 LOAD_GAME_COMMAND, DELETE_GAME_COMMAND, EXIT_GAME_COMMAND);

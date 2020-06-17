@@ -116,7 +116,7 @@ public class Server {
             StringBuilder message;
 
 
-            if(DISCONNECT_COMMAND.equals(command)){
+            if (DISCONNECT_COMMAND.equals(command)) {
                 channelsByUsernames.remove(usernamesByChannels.remove(socketChannel));
 
                 ByteBuffer writeBuffer = ByteBuffer.wrap(DISCONNECT_COMMAND.getBytes());
@@ -127,10 +127,10 @@ public class Server {
 
             CommandDistributor commandDistributor = new CommandDistributor();
 
-            if (!commandDistributor.getAllCommands().contains(command)){
+            if (!commandDistributor.getAllCommands().contains(command)) {
                 message = new StringBuilder(Message.WRONG_COMMAND.getValue());
             } else {
-                message = commandDistributor.executeCommand(command, socketChannel, gameByChannels, games, usernamesByChannels,channelsByUsernames, tokenIndex, tokens, username);
+                message = commandDistributor.executeCommand(command, socketChannel, gameByChannels, games, usernamesByChannels, channelsByUsernames, tokenIndex, tokens, username);
             }
 
             ByteBuffer byteBuffer = ByteBuffer.wrap(message.toString().getBytes());
