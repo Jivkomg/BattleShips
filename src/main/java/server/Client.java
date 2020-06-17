@@ -1,5 +1,7 @@
 package server;
 
+import enums.Message;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -62,16 +64,7 @@ public class Client extends Thread {
     }
 
     private String getAvailableCommands() {
-        return "Available commands:\n" +
-                "\tusername <new-username> //to change your username\n" +
-                "\tlist-games //lists all available games\n " +
-                "\tplace [<letter><number>}-<letter><number>] // example:  place A1-A5\n" +
-                "\thit [<letter><number>] // example: hit D9\n" +
-                "\tcreate-game [<game-name>] // creates a new game \n" +
-                "\tjoin-game [<game-name>] // if a name is missing you will be connected to a random game\n" +
-                "\tsave-game // to save your game\n" +
-                "\tload-game [<game-name>] // when you are in ready state with player you can load your previous game\n" +
-                "\tdelete-game [<game-name>] // deletes a previous save by name";
+        return Message.TUTORIAL_MESSAGE.getValue();
     }
 
 }

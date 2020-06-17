@@ -9,6 +9,7 @@ import static server.Client.DEFAULT_BUFFER_CAPACITY;
 
 public class ClientWriter implements Runnable {
     private static final String DISCONNECT_COMMAND = "disconnect";
+    private static final int OFFSET = 0;
 
     private SocketChannel socketChannel;
     private ByteBuffer buffer = ByteBuffer.allocate(DEFAULT_BUFFER_CAPACITY);
@@ -24,7 +25,7 @@ public class ClientWriter implements Runnable {
                 buffer.clear();
                 socketChannel.read(buffer);
                 buffer.flip();
-                String serverMessage = new String(buffer.array(), 0, buffer.limit());
+                String serverMessage = new String(buffer.array(), OFFSET, buffer.limit());
                 if (DISCONNECT_COMMAND.equalsIgnoreCase(serverMessage)) {
                     break;
                 }

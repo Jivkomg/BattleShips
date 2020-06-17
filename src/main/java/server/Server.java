@@ -22,6 +22,7 @@ public class Server {
     private static final int BUFFER_CAPACITY = 1000;
 
     private static final String DISCONNECT_COMMAND = "disconnect";
+    private static final int OFFSET = 0;
 
     private Map<SocketChannel, String> usernamesByChannels = new HashMap<>();
     private Map<String, SocketChannel> channelsByUsernames = new HashMap<>();
@@ -97,7 +98,7 @@ public class Server {
             StringBuilder clientMessageBuilder = new StringBuilder();
             while (socketChannel.read(buffer) > 0) {
                 buffer.flip();
-                clientMessageBuilder.append(new String(buffer.array(), 0, buffer.limit()));
+                clientMessageBuilder.append(new String(buffer.array(), OFFSET, buffer.limit()));
                 buffer.clear();
             }
             String clientMessage = clientMessageBuilder.toString();

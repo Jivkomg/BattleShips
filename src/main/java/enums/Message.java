@@ -29,7 +29,20 @@ public enum Message {
     LOAD_GAME("Successfully loaded a game\n"),
     DELETE_GAME("Successfully deleted game\n"),
     CANNOT_DELETE("Cannot delete game\n"),
-    START_HITTING("You can now start hitting the other player!\n");
+    START_HITTING("You can now start hitting the other player!\n"),
+    TUTORIAL_MESSAGE("Available commands:\n" +
+            "\tusername <new-username> //to change your username\n" +
+            "\tlist-games //lists all available games\n " +
+            "\tplace [<letter><number>}-<letter><number>] // example:  place A1-A5\n" +
+            "\thit [<letter><number>] // example: hit D9\n" +
+            "\tcreate-game [<game-name>] // creates a new game \n" +
+            "\tjoin-game [<game-name>] // if a name is missing you will be connected to a random game\n" +
+            "\tsave-game // to save your game\n" +
+            "\tload-game [<game-name>] // when you are in ready state with player you can load your previous game\n" +
+            "\tdelete-game [<game-name>] // deletes a previous save by name"),
+    READY_GAME_MESSAGE("Game is ready, you are all set to go! Start placing ships(limit 10 ships)." +
+            " One Aircraft carrier(5 fields), two battleships(4 fields), three submarines(3 fields), four patrol boats(2 fields))\n"),
+    GAME_OVER_MESSAGE("Game Over. Winner is: ");
 
     private String value;
 

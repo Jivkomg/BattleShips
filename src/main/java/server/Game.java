@@ -1,6 +1,7 @@
 package server;
 
 import enums.GameState;
+import enums.Message;
 import models.Board;
 
 import java.util.HashMap;
@@ -8,11 +9,15 @@ import java.util.Map;
 import java.util.Set;
 
 public class Game {
+    private static final String NEW_LINE_DELIMITER = "\n";
+    private static final String REGEX = "-";
+    private static final int MAX_NUMBER_OF_PLAYERS = 2;
     private Map<String, Board> boardByUsername = new HashMap<>();
     private String name;
     private Map<String, Boolean> readyStateByUsername = new HashMap<>();
     private GameState gameState = GameState.NOT_READY;
     private Map<String, Boolean> playerTurn = new HashMap<>();
+    private static final char FIRST_BOARD_INDEX = 'A';
 
     public GameState getGameState() {
         return gameState;
@@ -47,7 +52,7 @@ public class Game {
     }
 
     public boolean addUserToGame(String username) {
-        if (getPlayers().size() < 2) {
+        if (getPlayers().size() < MAX_NUMBER_OF_PLAYERS) {
             boardByUsername.put(username, new Board());
             readyStateByUsername.put(username, false);
             return true;
@@ -57,12 +62,11 @@ public class Game {
 
     public String getReadyMessage(String username) {
         readyStateByUsername.put(username, true);
-        if (getPlayers().size() == 2
+        if (getPlayers().size() == MAX_NUMBER_OF_PLAYERS
                 && readyStateByUsername.values().stream().reduce((left, right) -> left && right).get()) {
             gameState = GameState.PLACING;
 
-            return "Game is ready, you are all set to go! Start placing ships(limit 10 ships)." +
-                    " One Aircraft carrier(5 fields), two battleships(4 fields), three submarines(3 fields), four patrol boats(2 fields))\n";
+            return Message.READY_GAME_MESSAGE.getValue();
         }
         return "";
     }
@@ -78,23 +82,13 @@ public class Game {
         StringBuilder boardsViewPlayerOne = new StringBuilder();
         StringBuilder boardsViewPlayerTwo = new StringBuilder();
 
-        boardsViewPlayerOne.append("\n");
-        boardsViewPlayerOne.append(boardByUsername.get(username).getBoardView()).append("\n\n");
-        boardsViewPlayerOne.append(enemyBoard.getHiddenBoardView());
-
-        boardsViewPlayerTwo.append("\n");
-        boardsViewPlayerTwo.append(enemyBoard.getBoardView()).append("\n\n");
-        boardsViewPlayerTwo.append(boardByUsername.get(username).getHiddenBoardView());
+        getInitialBoardsView(username, enemyBoard, boardsViewPlayerOne, boardsViewPlayerTwo);
 
         String enemyUsername = boardByUsername.entrySet().stream()
                 .filter(entry -> !entry.getKey().equals(username)).findFirst().get().getKey();
 
-        if (enemyBoard.gameOver()) {
-            String message = "Game Over. Winner is: " + username + "\n";
-            boardViewByUsername.put(username, boardsViewPlayerOne.toString() + message);
-            boardViewByUsername.put(enemyUsername, boardsViewPlayerTwo.toString() + message);
-            playerTurn.put(username, false);
-            playerTurn.put(enemyUsername, false);
+        if (enemyBoard.isGameOver()) {
+            getGameOverView(username, boardViewByUsername, boardsViewPlayerOne, boardsViewPlayerTwo, enemyUsername);
         } else {
             boardViewByUsername.put(username, boardsViewPlayerOne.toString());
             boardViewByUsername.put(enemyUsername, boardsViewPlayerTwo.toString());
@@ -103,16 +97,34 @@ public class Game {
         return boardViewByUsername;
     }
 
+    private void getGameOverView(String username, Map<String, String> boardViewByUsername, StringBuilder boardsViewPlayerOne, StringBuilder boardsViewPlayerTwo, String enemyUsername) {
+        String message = Message.GAME_OVER_MESSAGE.getValue() + username + NEW_LINE_DELIMITER;
+        boardViewByUsername.put(username, boardsViewPlayerOne.toString() + message);
+        boardViewByUsername.put(enemyUsername, boardsViewPlayerTwo.toString() + message);
+        playerTurn.put(username, false);
+        playerTurn.put(enemyUsername, false);
+    }
+
+    private void getInitialBoardsView(String username, Board enemyBoard, StringBuilder boardsViewPlayerOne, StringBuilder boardsViewPlayerTwo) {
+        boardsViewPlayerOne.append(NEW_LINE_DELIMITER);
+        boardsViewPlayerOne.append(boardByUsername.get(username).getBoardView()).append(NEW_LINE_DELIMITER).append(NEW_LINE_DELIMITER);
+        boardsViewPlayerOne.append(enemyBoard.getHiddenBoardView());
+
+        boardsViewPlayerTwo.append(NEW_LINE_DELIMITER);
+        boardsViewPlayerTwo.append(enemyBoard.getBoardView()).append(NEW_LINE_DELIMITER).append(NEW_LINE_DELIMITER);
+        boardsViewPlayerTwo.append(boardByUsername.get(username).getHiddenBoardView());
+    }
+
     public boolean placeShip(String username, String positions) {
         if (boardByUsername.get(username).isSizeOfPlacedShipsExceedingLimit()) {
             return false;
         }
-        String[] positionTokens = positions.toUpperCase().split("-");
+        String[] positionTokens = positions.toUpperCase().split(REGEX);
 
-        int xCoordinate1 = positionTokens[0].charAt(0) - 'A';
+        int xCoordinate1 = positionTokens[0].charAt(0) - FIRST_BOARD_INDEX;
         int yCoordinate1 = Integer.parseInt(positionTokens[0].substring(1)) - 1;
 
-        int xCoordinate2 = positionTokens[1].charAt(0) - 'A';
+        int xCoordinate2 = positionTokens[1].charAt(0) - FIRST_BOARD_INDEX;
         int yCoordinate2 = Integer.parseInt(positionTokens[1].substring(1)) - 1;
 
         if (boardByUsername.get(username).placeShip(xCoordinate1, yCoordinate1, xCoordinate2, yCoordinate2)) {

@@ -139,7 +139,7 @@ public class Board {
         return x < BOARD_MIN_SIZE || y < BOARD_MIN_SIZE || x >= BOARD_MAX_SIZE || y >= BOARD_MAX_SIZE;
     }
 
-    public boolean gameOver() {
+    public boolean isGameOver() {
         return ships.stream().allMatch(Ship::isSunk);
     }
 
