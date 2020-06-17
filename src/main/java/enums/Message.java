@@ -13,7 +13,7 @@ public enum Message {
     READING_EXCEPTION_HAS_OCCURRED("Sorry, a problem when reading from server has occurred\n"),
     NOT_JOINED("Sorry, but you haven't joined a game yet\n"),
     INVALID_POSITION("Sorry, but this is not a valid position or you are exceeding the limit.\n"),
-    PLACE_SHIP("Successfully places a ship\n"),
+    PLACE_SHIP("Successfully placed a ship\n"),
     NO_NAME("Unsuccessful, you didn't type any name\n"),
     NO_GAME("Sorry, but there are no games. You can create one yourself\n"),
     AVAILABLE_GAMES("Available games are: "),

@@ -49,17 +49,17 @@ public class Board {
         }
 
         if (x1 == x2) {
-            return setupShipOnXAxis(x1, y1, y2);
+            return setupShipOnAxis(x1, y1, y2, true);
         }
         if (y1 == y2) {
-            return setupShipOnYAxis(y1, x1, x2);
+            return setupShipOnAxis(y1, x1, x2, false);
         } else {
             return false;
         }
 
     }
 
-    private boolean setupShipOnXAxis(int axisCoordinate, int firstCoordinate, int lastCoordinate) {
+    private boolean setupShipOnAxis(int axisCoordinate, int firstCoordinate, int lastCoordinate, boolean isHorizontal) {
         int shipLength = Math.abs(firstCoordinate - lastCoordinate) + 1;
         ShipType shipType = ShipType.fromLength(shipLength);
 
@@ -73,43 +73,28 @@ public class Board {
             return false;
         }
 
-        for (int i = firstCoordinate; i <= lastCoordinate; i++) {
-            if (!fields[axisCoordinate][i].getShipFieldState().equals(ShipFieldState.NO_SHIP_FIELD)) {
-                return false;
+        if (isHorizontal) {
+            for (int i = firstCoordinate; i <= lastCoordinate; i++) {
+                if (!fields[axisCoordinate][i].getShipFieldState().equals(ShipFieldState.NO_SHIP_FIELD)) {
+                    return false;
+                }
+            }
+
+            for (int i = firstCoordinate; i <= lastCoordinate; i++) {
+                fields[axisCoordinate][i].setShip(ship);
+            }
+        } else {
+            for (int i = firstCoordinate; i <= lastCoordinate; i++) {
+                if (!fields[i][axisCoordinate].getShipFieldState().equals(ShipFieldState.NO_SHIP_FIELD)) {
+                    return false;
+                }
+            }
+
+            for (int i = firstCoordinate; i <= lastCoordinate; i++) {
+                fields[i][axisCoordinate].setShip(ship);
             }
         }
 
-        for (int i = firstCoordinate; i <= lastCoordinate; i++) {
-            fields[axisCoordinate][i].setShip(ship);
-        }
-
-        ships.add(ship);
-        return true;
-    }
-
-    private boolean setupShipOnYAxis(int axisCoordinate, int firstCoordinate, int lastCoordinate) {
-        int shipLength = Math.abs(firstCoordinate - lastCoordinate) + 1;
-        ShipType shipType = ShipType.fromLength(shipLength);
-
-        if (shipType == null) {
-            return false;
-        }
-
-        Ship ship = new Ship(shipType);
-
-        if (isShipTypeExceedingLimit(shipType, ship)) {
-            return false;
-        }
-
-        for (int i = firstCoordinate; i <= lastCoordinate; i++) {
-            if (!fields[i][axisCoordinate].getShipFieldState().equals(ShipFieldState.NO_SHIP_FIELD)) {
-                return false;
-            }
-        }
-
-        for (int i = firstCoordinate; i <= lastCoordinate; i++) {
-            fields[i][axisCoordinate].setShip(ship);
-        }
 
         ships.add(ship);
         return true;
