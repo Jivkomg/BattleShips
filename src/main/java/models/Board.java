@@ -190,6 +190,6 @@ public class Board {
     }
 
     public boolean isSizeOfPlacedShipsExceedingLimit() {
-        return ships.size() == 10;
+        return ships.size() == 2;
     }
 }

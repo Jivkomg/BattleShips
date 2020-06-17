@@ -34,7 +34,7 @@ public class GameTest {
 
     @Test
     public void readyTest_WhenBothAreReady_ShouldReturnMessage() {
-        String message = "Game is getReadyMessage, you are all set to go! Start placing ships(limit 10 ships)." +
+        String message = "Game is ready, you are all set to go! Start placing ships(limit 10 ships)." +
                 " One Aircraft carrier(5 fields), two battleships(4 fields), three submarines(3 fields), four patrol boats(2 fields))\n";
 
         String username1 = "name1";

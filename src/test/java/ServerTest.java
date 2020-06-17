@@ -1,20 +1,19 @@
 import enums.GameState;
+import input.commands.*;
+import interfaces.Command;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import server.Game;
-import server.Server;
 
 import static enums.Message.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.util.*;
 
@@ -35,8 +34,7 @@ public class ServerTest {
     @Mock(name = "games")
     Map<String, Game> games = new HashMap<>();
 
-    @InjectMocks
-    Server server = new Server();
+    private Command command;
 
     @Before
     public void init() {
@@ -47,8 +45,10 @@ public class ServerTest {
     public void createGameTest_WhenCreated_ShouldReturnSuccessfulMessage() {
         when(gameByChannels.get(SocketChannel.class)).thenReturn(null);
         String username = "name";
+        command = new CreateGameCommand(socketChannel, games, gameByChannels, 1, new String[]{"create-game", "ala"}, username);
+
         Assert.assertEquals("Created game " + "ala, PLAYERS: 1/2\n" + ENTER_START.getValue(),
-                server.createGame(socketChannel, username, 1, new String[]{"create-game", "ala"}).toString());
+                command.execute().toString());
 
     }
 
@@ -58,8 +58,8 @@ public class ServerTest {
         channelsByUsername.put(username, socketChannel);
 
         when(usernamesByChannels.get(socketChannel)).thenReturn(username);
-        Server server = new Server();
-        Assert.assertEquals(USERNAME_CREATED.getValue(), server.createUsername(socketChannel, 1, new String[]{"username", "name"}).toString());
+        command = new UsernameCommand(socketChannel, usernamesByChannels, channelsByUsername, 1, new String[]{"create-game", "ala"});
+        Assert.assertEquals(USERNAME_CREATED.getValue(), command.execute().toString());
     }
 
     @Test
@@ -72,20 +72,22 @@ public class ServerTest {
         when(games.isEmpty()).thenReturn(false);
         when(games.keySet()).thenReturn(gameSet);
         when(games.get(anyString())).thenReturn(game);
-        Assert.assertEquals(AVAILABLE_GAMES.getValue() + "a(2/2)\n", server.listGames().toString());
+        command = new ListGamesCommand(games);
+        Assert.assertEquals(AVAILABLE_GAMES.getValue() + "a(2/2)\n", command.execute().toString());
     }
 
     @Test
     public void listGamesTest_WhenThereAreNoGames_ShouldReturnNoGame() {
         when(games.isEmpty()).thenReturn(true);
-        Assert.assertEquals(NO_GAME.getValue(), server.listGames().toString());
+        command = new ListGamesCommand(games);
+        Assert.assertEquals(NO_GAME.getValue(), command.execute().toString());
     }
 
     @Test
     public void joinGamesTest_WhenYouHaveGame_ShouldReturnHaveGame() {
         when(gameByChannels.get(socketChannel)).thenReturn(new Game());
-
-        Assert.assertEquals(HAVE_GAME.getValue() + "null\n", server.joinGame(socketChannel, "name", 1, new String[]{"join-game", "game"}).toString());
+        command = new JoinGameCommand(socketChannel, games, gameByChannels, 1, new String[]{"join-game", "game"}, "name");
+        Assert.assertEquals(HAVE_GAME.getValue() + "null\n", command.execute().toString());
     }
 
     @Test
@@ -101,7 +103,10 @@ public class ServerTest {
         String message = JOINED_GAME.getValue() + "game" + "\n" +
                 "PLAYERS: " + "1/2" + "\n" +
                 ENTER_START.getValue();
-        Assert.assertEquals(message, server.joinGame(socketChannel, "name", 1, new String[]{"join-game", "game"}).toString());
+
+        command = new JoinGameCommand(socketChannel, games, gameByChannels, 1, new String[]{"join-game", "game"}, "name");
+
+        Assert.assertEquals(message, command.execute().toString());
     }
 
     @Test
@@ -119,14 +124,18 @@ public class ServerTest {
         String message = JOINED_GAME.getValue() + "game" + "\n" +
                 "PLAYERS: " + "2/2" + "\n" +
                 ENTER_START.getValue();
-        Assert.assertEquals(message, server.joinGame(socketChannel, "name", 1, new String[]{"join-game"}).toString());
+
+        command = new JoinGameCommand(socketChannel, games, gameByChannels, 1, new String[]{"join-game"}, "name");
+
+        Assert.assertEquals(message, command.execute().toString());
     }
 
     @Test
     public void placeShipTest_WhenNoGame_ShouldReturnNotJoinedMessage() {
         when(gameByChannels.get(socketChannel)).thenReturn(null);
+        command = new PlaceCommand(socketChannel, gameByChannels, 1, new String[]{"place", "A1-A3"}, "name");
         Assert.assertEquals(NOT_JOINED.getValue(),
-                server.placeShip(socketChannel, "name", 1, new String[]{"place", "A1-A3"}).toString());
+                command.execute().toString());
     }
 
     @Test
@@ -135,32 +144,40 @@ public class ServerTest {
         game.setGameState(GameState.NOT_READY);
         when(gameByChannels.get(socketChannel)).thenReturn(game);
 
+        command = new PlaceCommand(socketChannel, gameByChannels, 1, new String[]{"place", "A1-A3"}, "name");
+
         Assert.assertEquals(NOT_READY.getValue(),
-                server.placeShip(socketChannel, "name", 1, new String[]{"place", "A1-A3"}).toString());
+                command.execute().toString());
     }
 
     @Test
-    public void hitShipTest_WhenGameIsNull_ShouldReturnNotJoinedMessage() throws IOException {
+    public void hitShipTest_WhenGameIsNull_ShouldReturnNotJoinedMessage() {
         when(gameByChannels.get(socketChannel)).thenReturn(null);
-        Assert.assertEquals(NOT_JOINED.getValue(), server.hitShip(socketChannel, "name", 0, new String[]{"hit", "A1"}).toString());
+        command = new HitCommand(socketChannel, gameByChannels, channelsByUsername, 0,  new String[]{"hit", "A1"}, "name");
+
+        Assert.assertEquals(NOT_JOINED.getValue(), command.execute().toString());
     }
 
     @Test
-    public void hitShipTest_WhenInvalidPosition_ShouldReturnInvalidMessage() throws IOException {
+    public void hitShipTest_WhenInvalidPosition_ShouldReturnInvalidMessage() {
         Game game = new Game();
 
         when(gameByChannels.get(socketChannel)).thenReturn(game);
 
-        Assert.assertEquals(INVALID_POSITION.getValue(), server.hitShip(socketChannel, "name", 1, new String[]{"hit", "a"}).toString());
+        command = new HitCommand(socketChannel, gameByChannels, channelsByUsername, 1, new String[]{"hit", "a"}, "name");
+
+        Assert.assertEquals(INVALID_POSITION.getValue(), command.execute().toString());
     }
 
     @Test
-    public void hitShipTest_WhenGameIsNotPlaying_ShouldReturnNotReady() throws IOException {
+    public void hitShipTest_WhenGameIsNotPlaying_ShouldReturnNotReady() {
         Game game = new Game();
 
         game.setGameState(GameState.NOT_READY);
         when(gameByChannels.get(socketChannel)).thenReturn(game);
 
-        Assert.assertEquals(NOT_READY.getValue(), server.hitShip(socketChannel, "name", 1, new String[]{"hit", "A1"}).toString());
+        command = new HitCommand(socketChannel, gameByChannels, channelsByUsername, 1, new String[]{"hit", "A1"}, "name");
+
+        Assert.assertEquals(NOT_READY.getValue(), command.execute().toString());
     }
 }

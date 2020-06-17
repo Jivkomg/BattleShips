@@ -5,9 +5,13 @@ import interfaces.Command;
 import server.Game;
 
 import java.nio.channels.SocketChannel;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public class CommandDistributor {
+    private static final String UNEXPECTED_VALUE = "Unexpected value: ";
+
     private static final String USERNAME_COMMAND = "username";
     private static final String CREATE_GAME_COMMAND = "create-game";
     private static final String JOIN_GAME_COMMAND = "join-game";
@@ -20,15 +24,13 @@ public class CommandDistributor {
     private static final String PLACE_COMMAND = "place";
     private static final String EXIT_GAME_COMMAND = "exit";
 
-    private Command command;
-
-    public CommandDistributor(Command command) {
-        this.command = command;
+    public CommandDistributor() {
     }
 
     public StringBuilder executeCommand(String inputCommand, SocketChannel socketChannel, Map<SocketChannel, Game> gameByChannels,
                                         Map<String, Game> games, Map<SocketChannel, String> usernamesByChannels,
                                         Map<String, SocketChannel> channelsByUsernames, int tokenIndex, String[] tokens, String username) {
+        Command command;
         switch (inputCommand) {
             case USERNAME_COMMAND:
                 command = new UsernameCommand(socketChannel, usernamesByChannels, channelsByUsernames, tokenIndex, tokens);
@@ -63,9 +65,17 @@ public class CommandDistributor {
             case EXIT_GAME_COMMAND:
                 command = new ExitGameCommand(gameByChannels, socketChannel, channelsByUsernames, username);
                 break;
+            default:
+                throw new IllegalStateException(UNEXPECTED_VALUE + inputCommand);
         }
 
         StringBuilder messageForTheUser = command.execute();
         return messageForTheUser;
+    }
+
+    public List<String> getAllCommands(){
+        return Arrays.asList(USERNAME_COMMAND, CREATE_GAME_COMMAND, JOIN_GAME_COMMAND,
+                LIST_GAMES_COMMAND, PLACE_COMMAND, HIT_COMMAND, START_COMMAND, SAVE_GAMES_COMMAND,
+                LOAD_GAME_COMMAND, DELETE_GAME_COMMAND, EXIT_GAME_COMMAND);
     }
 }
