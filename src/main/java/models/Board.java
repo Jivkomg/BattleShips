@@ -19,6 +19,7 @@ public class Board {
     private static final char EMPTY_FIELD_TOKEN = '_';
     private static final char EMPTY_FIELD_SIDE_TOKEN = '|';
     private static final char FIRST_BOARD_INDEX = 'A';
+    private static final String NEW_LINE_DELIMITER = "\n";
 
     private Field[][] fields;
     private List<Ship> ships;
@@ -148,18 +149,18 @@ public class Board {
 
     private StringBuilder getEmptyBoardView() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("       ").append(FIRST_PLAYER_BOARD_MESSAGE).append("\n  ");
+        stringBuilder.append("       ").append(FIRST_PLAYER_BOARD_MESSAGE).append(NEW_LINE_DELIMITER + "  ");
 
         for (int j = 1; j <= BOARD_MAX_SIZE; j++) {
             stringBuilder.append(" ").append(j);
         }
 
-        stringBuilder.append("\n  ");
+        stringBuilder.append(NEW_LINE_DELIMITER + "  ");
 
         for (int j = 1; j <= BOARD_MAX_SIZE; j++) {
             stringBuilder.append(" ").append(EMPTY_FIELD_TOKEN);
         }
-        stringBuilder.append("\n");
+        stringBuilder.append(NEW_LINE_DELIMITER);
         return stringBuilder;
     }
 
@@ -175,6 +176,6 @@ public class Board {
     }
 
     public boolean isSizeOfPlacedShipsExceedingLimit() {
-        return ships.size() == 2;
+        return ships.size() == BOARD_MAX_SIZE;
     }
 }
