@@ -179,13 +179,13 @@ public class Board {
                 .replace(FIRST_PLAYER_BOARD_MESSAGE, SECOND_PLAYER_BOARD_MESSAGE);
     }
 
-    public void play(String move) {
+    public void hitEnemyBoard(String move) {
         int xCoordinate = move.toUpperCase().charAt(0) - FIRST_BOARD_INDEX;
         int yCoordinate = Integer.parseInt(move.substring(1)) - 1;
-        fields[xCoordinate][yCoordinate].getHit();
+        fields[xCoordinate][yCoordinate].receiveHitFromEnemyPlayer();
     }
 
-    public boolean isFull() {
+    public boolean isSizeOfPlacedShipsExceedingLimit() {
         return ships.size() == 10;
     }
 }

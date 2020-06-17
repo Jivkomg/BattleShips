@@ -67,8 +67,8 @@ public class ServerTest {
         Set<String> gameSet = new HashSet<>();
         gameSet.add("a");
         Game game = new Game();
-        game.addUser("1");
-        game.addUser("2");
+        game.addUserToGame("1");
+        game.addUserToGame("2");
         when(games.isEmpty()).thenReturn(false);
         when(games.keySet()).thenReturn(gameSet);
         when(games.get(anyString())).thenReturn(game);
@@ -112,7 +112,7 @@ public class ServerTest {
         Game game = new Game();
         game.setName("game");
         gameSet.put("game", game);
-        game.addUser("1");
+        game.addUserToGame("1");
 
         when(games.values()).thenReturn(Collections.singletonList(game));
 

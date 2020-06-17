@@ -23,6 +23,7 @@ public class Client extends Thread {
         new Client().start();
     }
 
+    @Override
     public void start() {
         try (Scanner scanner = new Scanner(System.in);
              SocketChannel socketChannel = SocketChannel.open()) {
@@ -69,7 +70,7 @@ public class Client extends Thread {
                 "\tcreate-game [<game-name>] // creates a new game \n" +
                 "\tjoin-game [<game-name>] // if a name is missing you will be connected to a random game\n" +
                 "\tsave-game // to save your game\n" +
-                "\tload-game [<game-name>] // when you are in ready state with player you can load your previous game\n" +
+                "\tload-game [<game-name>] // when you are in getReadyMessage state with player you can load your previous game\n" +
                 "\tdelete-game [<game-name>] // deletes a previous save by name";
     }
 

@@ -17,7 +17,7 @@ public class GameTest {
         String username = "name";
         Game game = new Game();
 
-        Assert.assertTrue(game.addUser(username));
+        Assert.assertTrue(game.addUserToGame(username));
     }
 
     @Test
@@ -25,28 +25,28 @@ public class GameTest {
         String username1 = "name1";
         String username2 = "name2";
         Game game = new Game();
-        game.addUser(username1);
-        game.addUser(username2);
+        game.addUserToGame(username1);
+        game.addUserToGame(username2);
 
         String username3 = "name3";
-        Assert.assertFalse(game.addUser(username3));
+        Assert.assertFalse(game.addUserToGame(username3));
     }
 
     @Test
     public void readyTest_WhenBothAreReady_ShouldReturnMessage() {
-        String message = "Game is ready, you are all set to go! Start placing ships(limit 10 ships)." +
+        String message = "Game is getReadyMessage, you are all set to go! Start placing ships(limit 10 ships)." +
                 " One Aircraft carrier(5 fields), two battleships(4 fields), three submarines(3 fields), four patrol boats(2 fields))\n";
 
         String username1 = "name1";
         String username2 = "name2";
         Game game = new Game();
-        game.addUser(username1);
-        game.addUser(username2);
+        game.addUserToGame(username1);
+        game.addUserToGame(username2);
 
         game.getReadyStateByUsername().put(username1, true);
         game.getReadyStateByUsername().put(username2, true);
 
-        Assert.assertEquals(message, game.ready(username1));
+        Assert.assertEquals(message, game.getReadyMessage(username1));
     }
 
     @Test
@@ -55,13 +55,13 @@ public class GameTest {
         String username2 = "name2";
 
         Game game = new Game();
-        game.addUser(username1);
-        game.addUser(username2);
+        game.addUserToGame(username1);
+        game.addUserToGame(username2);
 
         game.getReadyStateByUsername().put(username1, false);
         game.getReadyStateByUsername().put(username2, false);
 
-        Assert.assertEquals("", game.ready(username1));
+        Assert.assertEquals("", game.getReadyMessage(username1));
     }
 
     @Test
@@ -69,9 +69,9 @@ public class GameTest {
         String username1 = "name1";
 
         Game game = new Game();
-        game.addUser(username1);
+        game.addUserToGame(username1);
 
-        Assert.assertEquals("", game.ready(username1));
+        Assert.assertEquals("", game.getReadyMessage(username1));
     }
 
     @Test
@@ -79,8 +79,8 @@ public class GameTest {
         String username1 = "name1";
         String username2 = "name2";
         Game game = new Game();
-        game.addUser(username1);
-        game.addUser(username2);
+        game.addUserToGame(username1);
+        game.addUserToGame(username2);
 
         Map<String, String> boardViewByUsername = new HashMap<>();
 
@@ -149,7 +149,7 @@ public class GameTest {
                 "J |_|_|_|_|_|_|_|_|_|_|\n" +
                 "Game Over. Winner is: name1\n");
 
-        Assert.assertEquals(game.play(username1, "A1"), boardViewByUsername);
+        Assert.assertEquals(game.getBoardViewByPerformingMove(username1, "A1"), boardViewByUsername);
     }
 
     @Test
@@ -157,8 +157,8 @@ public class GameTest {
         String username1 = "name1";
         String username2 = "name2";
         Game game = new Game();
-        game.addUser(username1);
-        game.addUser(username2);
+        game.addUserToGame(username1);
+        game.addUserToGame(username2);
 
         Board board1 = new Board();
         List<Ship> ships = Arrays.asList(new Ship(ShipType.AIRCRAFT_CARRIER),
@@ -174,7 +174,7 @@ public class GameTest {
 
         board1.setShips(ships);
         game.getBoardByUsername().put(username1, board1);
-        Assert.assertFalse(game.placeShips(username1, "A1-A3"));
+        Assert.assertFalse(game.placeShip(username1, "A1-A3"));
     }
 
     @Test
@@ -182,12 +182,12 @@ public class GameTest {
         String username1 = "name1";
         String username2 = "name2";
         Game game = new Game();
-        game.addUser(username1);
-        game.addUser(username2);
+        game.addUserToGame(username1);
+        game.addUserToGame(username2);
 
 
-        game.placeShips(username1, "A1-A2");
-        Assert.assertFalse(game.placeShips(username1, "A1-A3"));
+        game.placeShip(username1, "A1-A2");
+        Assert.assertFalse(game.placeShip(username1, "A1-A3"));
     }
 
     @Test
@@ -195,12 +195,12 @@ public class GameTest {
         String username1 = "name1";
         String username2 = "name2";
         Game game = new Game();
-        game.addUser(username1);
-        game.addUser(username2);
+        game.addUserToGame(username1);
+        game.addUserToGame(username2);
 
 
-        game.placeShips(username1, "A1-B1");
-        Assert.assertFalse(game.placeShips(username1, "A1-B3"));
+        game.placeShip(username1, "A1-B1");
+        Assert.assertFalse(game.placeShip(username1, "A1-B3"));
     }
 
     @Test
@@ -208,10 +208,10 @@ public class GameTest {
         String username1 = "name1";
         String username2 = "name2";
         Game game = new Game();
-        game.addUser(username1);
-        game.addUser(username2);
+        game.addUserToGame(username1);
+        game.addUserToGame(username2);
 
-        Assert.assertFalse(game.placeShips(username1, "A1-B2"));
+        Assert.assertFalse(game.placeShip(username1, "A1-B2"));
     }
 
     @Test
@@ -219,11 +219,11 @@ public class GameTest {
         String username1 = "name1";
         String username2 = "name2";
         Game game = new Game();
-        game.addUser(username1);
-        game.addUser(username2);
+        game.addUserToGame(username1);
+        game.addUserToGame(username2);
 
 
-        Assert.assertFalse(game.placeShips(username1, "A1-A1"));
+        Assert.assertFalse(game.placeShip(username1, "A1-A1"));
     }
 
     @Test
@@ -231,10 +231,10 @@ public class GameTest {
         String username1 = "name1";
         String username2 = "name2";
         Game game = new Game();
-        game.addUser(username1);
-        game.addUser(username2);
+        game.addUserToGame(username1);
+        game.addUserToGame(username2);
 
-        Assert.assertFalse(game.placeShips(username1, "A0-B3"));
+        Assert.assertFalse(game.placeShip(username1, "A0-B3"));
     }
 
     @Test
@@ -242,10 +242,10 @@ public class GameTest {
         String username1 = "name1";
         String username2 = "name2";
         Game game = new Game();
-        game.addUser(username1);
-        game.addUser(username2);
+        game.addUserToGame(username1);
+        game.addUserToGame(username2);
 
-        Assert.assertFalse(game.placeShips(username1, "C2-A0"));
+        Assert.assertFalse(game.placeShip(username1, "C2-A0"));
     }
 
     @Test
@@ -253,11 +253,11 @@ public class GameTest {
         String username1 = "name1";
         String username2 = "name2";
         Game game = new Game();
-        game.addUser(username1);
-        game.addUser(username2);
+        game.addUserToGame(username1);
+        game.addUserToGame(username2);
 
-        game.placeShips(username1, "A1-A2");
-        Assert.assertFalse(game.placeShips(username1, "A2-A5"));
+        game.placeShip(username1, "A1-A2");
+        Assert.assertFalse(game.placeShip(username1, "A2-A5"));
     }
 
     @Test
@@ -265,8 +265,8 @@ public class GameTest {
         String username1 = "name1";
         String username2 = "name2";
         Game game = new Game();
-        game.addUser(username1);
-        game.addUser(username2);
+        game.addUserToGame(username1);
+        game.addUserToGame(username2);
 
         game.getPlayerTurn().put(username1, true);
         Assert.assertTrue(game.isPlayerTurn(username1));
@@ -277,8 +277,8 @@ public class GameTest {
         String username1 = "name1";
         String username2 = "name2";
         Game game = new Game();
-        game.addUser(username1);
-        game.addUser(username2);
+        game.addUserToGame(username1);
+        game.addUserToGame(username2);
 
         game.getPlayerTurn().put(username1, false);
         Assert.assertFalse(game.isPlayerTurn(username1));

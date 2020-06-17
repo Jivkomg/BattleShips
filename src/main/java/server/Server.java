@@ -275,8 +275,8 @@ public class Server {
         if (game != null) {
             if (GameState.NOT_READY.equals(game.getGameState())) {
                 message = new StringBuilder(READY.getValue());
-                String messageToBegin = game.ready(username);
-                message.append(game.ready(username));
+                String messageToBegin = game.getReadyMessage(username);
+                message.append(game.getReadyMessage(username));
 
                 if (game.getPlayers().size() > 1) {
                     String otherUsername = game.getPlayers()
@@ -301,7 +301,7 @@ public class Server {
             if (checkValidPosition(position)) {
                 if (GameState.PLAYING.equals(game.getGameState())) {
                     if (game.isPlayerTurn(username)) {
-                        Map<String, String> messages = game.play(username, position);
+                        Map<String, String> messages = game.getBoardViewByPerformingMove(username, position);
                         message = new StringBuilder(messages.get(username));
                         String lastTurnMessage = "Last turn: " + username + ", " + position + "\n";
 
@@ -334,7 +334,7 @@ public class Server {
         Game game = gameByChannels.get(socketChannel);
         if (game != null) {
             if (game.getGameState().equals(GameState.PLACING)) {
-                if (game.placeShips(username, tokens[tokenIndex++])) {
+                if (game.placeShip(username, tokens[tokenIndex++])) {
                     message = new StringBuilder(PLACE_SHIP.getValue());
                     if (GameState.PLAYING.equals(game.getGameState())) {
                         message.append(START_HITTING.getValue());
@@ -385,7 +385,7 @@ public class Server {
             if (joinedGame == null) {
                 message = new StringBuilder(CANNOT_JOIN_GAME.getValue());
             } else {
-                if (joinedGame.addUser(username)) {
+                if (joinedGame.addUserToGame(username)) {
                     message = new StringBuilder(JOINED_GAME.getValue());
                     message.append(joinedGame.getName()).append("\n");
                     message.append("PLAYERS: ").append(joinedGame.getPlayers()
@@ -414,7 +414,7 @@ public class Server {
                     message = new StringBuilder(DUPLICATING_NAME.getValue());
                 } else {
                     Game newGame = new Game();
-                    newGame.addUser(username);
+                    newGame.addUserToGame(username);
                     newGame.setName(gameName);
                     games.put(gameName, newGame);
                     gameByChannels.put(socketChannel, newGame);

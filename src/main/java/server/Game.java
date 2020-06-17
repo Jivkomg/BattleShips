@@ -46,7 +46,7 @@ public class Game {
         return playerTurn;
     }
 
-    public boolean addUser(String username) {
+    public boolean addUserToGame(String username) {
         if (getPlayers().size() < 2) {
             boardByUsername.put(username, new Board());
             readyStateByUsername.put(username, false);
@@ -55,7 +55,7 @@ public class Game {
         return false;
     }
 
-    public String ready(String username) {
+    public String getReadyMessage(String username) {
         readyStateByUsername.put(username, true);
         if (getPlayers().size() == 2
                 && readyStateByUsername.values().stream().reduce((left, right) -> left && right).get()) {
@@ -67,11 +67,11 @@ public class Game {
         return "";
     }
 
-    public Map<String, String> play(String username, String move) {
+    public Map<String, String> getBoardViewByPerformingMove(String username, String move) {
         Board enemyBoard = boardByUsername.entrySet().stream()
                 .filter(entry -> !entry.getKey().equals(username)).findFirst().get().getValue();
 
-        enemyBoard.play(move);
+        enemyBoard.hitEnemyBoard(move);
 
         Map<String, String> boardViewByUsername = new HashMap<>();
 
@@ -103,8 +103,8 @@ public class Game {
         return boardViewByUsername;
     }
 
-    public boolean placeShips(String username, String positions) {
-        if (boardByUsername.get(username).isFull()) {
+    public boolean placeShip(String username, String positions) {
+        if (boardByUsername.get(username).isSizeOfPlacedShipsExceedingLimit()) {
             return false;
         }
         String[] positionTokens = positions.toUpperCase().split("-");
@@ -116,7 +116,7 @@ public class Game {
         int yCoordinate2 = Integer.parseInt(positionTokens[1].substring(1)) - 1;
 
         if (boardByUsername.get(username).placeShip(xCoordinate1, yCoordinate1, xCoordinate2, yCoordinate2)) {
-            if (boardByUsername.entrySet().stream().allMatch(entry -> entry.getValue().isFull())) {
+            if (boardByUsername.entrySet().stream().allMatch(entry -> entry.getValue().isSizeOfPlacedShipsExceedingLimit())) {
                 gameState = GameState.PLAYING;
                 playerTurn.put(username, true);
             }

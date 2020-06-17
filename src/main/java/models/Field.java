@@ -22,7 +22,7 @@ class Field {
         return shipFieldState;
     }
 
-    void getHit() {
+    void receiveHitFromEnemyPlayer() {
         if (UNDAMAGED_SHIP_FIELD.equals(shipFieldState)) {
             ship.getHit();
             shipFieldState = DAMAGED_SHIP_FIELD;
