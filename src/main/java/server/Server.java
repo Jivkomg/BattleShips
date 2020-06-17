@@ -1,7 +1,9 @@
 package server;
 
+import enums.Message;
 import input.CommandDistributor;
-import interfaces.Command;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -12,9 +14,9 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.*;
 
-import static enums.Message.*;
-
 public class Server {
+    private static Logger LOGGER = LoggerFactory.getLogger(Server.class);
+
     private static final int HOST_PORT = 8080;
     private static final String HOST_NAME = "localhost";
     private static final int MESSAGE_TOKENS_COUNT = 3;
@@ -36,12 +38,14 @@ public class Server {
     private void start() {
         try (Selector selector = Selector.open();
              ServerSocketChannel serverSocketChannel = ServerSocketChannel.open()) {
+            LOGGER.info("Starting configuring of server...");
             serverSocketChannel.bind(new InetSocketAddress(HOST_NAME, HOST_PORT));
             serverSocketChannel.configureBlocking(false);
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
             while (true) {
                 try {
+
                     int readyChannels = selector.select();
                     if (readyChannels == 0) {
                         continue;
@@ -65,14 +69,14 @@ public class Server {
                         keyIterator.remove();
                     }
                 } catch (IOException e) {
-                    System.err.println(SELECTOR_UNABLE_TO_SELECT_KEYS.getValue());
-                    e.printStackTrace();
+                    System.err.println(Message.SELECTOR_UNABLE_TO_SELECT_KEYS.getValue());
+                    LOGGER.error("Error during selecting keys", e);
                 }
             }
 
         } catch (IOException e) {
-            System.err.println(UNABLE_TO_INITIALIZE_APPLICATION.getValue());
-            e.printStackTrace();
+            System.err.println(Message.UNABLE_TO_INITIALIZE_APPLICATION.getValue());
+            LOGGER.error("Error initializing application", e);
         }
 
     }
@@ -87,7 +91,7 @@ public class Server {
             usernamesByChannels.put(clientSocketChannel, username);
             channelsByUsernames.put(username, clientSocketChannel);
         } catch (IOException e) {
-            System.err.println(ERROR_HAS_OCCURRED.getValue());
+            System.err.println(Message.ERROR_HAS_OCCURRED.getValue());
             e.printStackTrace();
         }
     }
@@ -124,7 +128,7 @@ public class Server {
             CommandDistributor commandDistributor = new CommandDistributor();
 
             if (!commandDistributor.getAllCommands().contains(command)){
-                message = new StringBuilder(WRONG_COMMAND.getValue());
+                message = new StringBuilder(Message.WRONG_COMMAND.getValue());
             } else {
                 message = commandDistributor.executeCommand(command, socketChannel, gameByChannels, games, usernamesByChannels,channelsByUsernames, tokenIndex, tokens, username);
             }
@@ -132,7 +136,7 @@ public class Server {
             ByteBuffer byteBuffer = ByteBuffer.wrap(message.toString().getBytes());
             socketChannel.write(byteBuffer);
         } catch (IOException e) {
-            System.err.println(ERROR_HAS_OCCURRED.getValue());
+            System.err.println(Message.ERROR_HAS_OCCURRED.getValue());
             e.printStackTrace();
         }
     }
