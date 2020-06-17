@@ -132,37 +132,51 @@ public class Server {
 
             String command = tokens[tokenIndex++];
             StringBuilder message;
-            if (USERNAME_COMMAND.equals(command)) {
-                message = createUsername(socketChannel, tokenIndex, tokens);
-            } else if (CREATE_GAME_COMMAND.equals(command)) {
-                message = createGame(socketChannel, username, tokenIndex, tokens);
-            } else if (JOIN_GAME_COMMAND.equals(command)) {
-                message = joinGame(socketChannel, username, tokenIndex, tokens);
-            } else if (LIST_GAMES_COMMAND.equals(command)) {
-                message = listGames();
-            } else if (PLACE_COMMAND.equals(command)) {
-                message = placeShip(socketChannel, username, tokenIndex, tokens);
-            } else if (HIT_COMMAND.equals(command)) {
-                message = hitShip(socketChannel, username, tokenIndex, tokens);
-            } else if (START_COMMAND.equals(command)) {
-                message = startGame(socketChannel, username);
-            } else if (DISCONNECT_COMMAND.equals(command)) {
-                channelsByUsernames.remove(usernamesByChannels.remove(socketChannel));
 
-                ByteBuffer writeBuffer = ByteBuffer.wrap(DISCONNECT_COMMAND.getBytes());
-                socketChannel.write(writeBuffer);
-                socketChannel.close();
-                return;
-            } else if (SAVE_GAMES_COMMAND.equals(command)) {
-                message = saveGame(socketChannel);
-            } else if (LOAD_GAME_COMMAND.equals(command)) {
-                message = loadGame(socketChannel, username, tokenIndex, tokens);
-            } else if (DELETE_GAME_COMMAND.equals(command)) {
-                message = deleteGame(tokenIndex, tokens);
-            } else if (EXIT_GAME_COMMAND.equals(command)) {
-                message = exitGame(socketChannel, username);
-            } else {
-                message = new StringBuilder(WRONG_COMMAND.getValue());
+            switch (command) {
+                case USERNAME_COMMAND:
+                    message = createUsername(socketChannel, tokenIndex, tokens);
+                    break;
+                case CREATE_GAME_COMMAND:
+                    message = createGame(socketChannel, username, tokenIndex, tokens);
+                    break;
+                case JOIN_GAME_COMMAND:
+                    message = joinGame(socketChannel, username, tokenIndex, tokens);
+                    break;
+                case LIST_GAMES_COMMAND:
+                    message = listGames();
+                    break;
+                case PLACE_COMMAND:
+                    message = placeShip(socketChannel, username, tokenIndex, tokens);
+                    break;
+                case HIT_COMMAND:
+                    message = hitShip(socketChannel, username, tokenIndex, tokens);
+                    break;
+                case START_COMMAND:
+                    message = startGame(socketChannel, username);
+                    break;
+                case DISCONNECT_COMMAND:
+                    channelsByUsernames.remove(usernamesByChannels.remove(socketChannel));
+
+                    ByteBuffer writeBuffer = ByteBuffer.wrap(DISCONNECT_COMMAND.getBytes());
+                    socketChannel.write(writeBuffer);
+                    socketChannel.close();
+                    return;
+                case SAVE_GAMES_COMMAND:
+                    message = saveGame(socketChannel);
+                    break;
+                case LOAD_GAME_COMMAND:
+                    message = loadGame(socketChannel, username, tokenIndex, tokens);
+                    break;
+                case DELETE_GAME_COMMAND:
+                    message = deleteGame(tokenIndex, tokens);
+                    break;
+                case EXIT_GAME_COMMAND:
+                    message = exitGame(socketChannel, username);
+                    break;
+                default:
+                    message = new StringBuilder(WRONG_COMMAND.getValue());
+                    break;
             }
 
             ByteBuffer byteBuffer = ByteBuffer.wrap(message.toString().getBytes());

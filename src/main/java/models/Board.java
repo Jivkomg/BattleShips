@@ -69,7 +69,7 @@ public class Board {
 
         Ship ship = new Ship(shipType);
 
-        if (ifShipTypeExceedsLimit(shipType, ship)) {
+        if (isShipTypeExceedingLimit(shipType, ship)) {
             return false;
         }
 
@@ -97,7 +97,7 @@ public class Board {
 
         Ship ship = new Ship(shipType);
 
-        if (ifShipTypeExceedsLimit(shipType, ship)) {
+        if (isShipTypeExceedingLimit(shipType, ship)) {
             return false;
         }
 
@@ -115,18 +115,22 @@ public class Board {
         return true;
     }
 
-    private boolean ifShipTypeExceedsLimit(ShipType shipType, Ship ship) {
-        if (shipType.equals(AIRCRAFT_CARRIER)) {
-            return ships.contains(ship);
-        } else if (shipType.equals(BATTLESHIP)) {
-            int cnt = (int) ships.stream().filter(s -> s.getShipType().equals(BATTLESHIP)).count();
-            return cnt >= 2;
-        } else if (shipType.equals(SUBMARINE)) {
-            int cnt = (int) ships.stream().filter(s -> s.getShipType().equals(SUBMARINE)).count();
-            return cnt >= 3;
-        } else if (shipType.equals(PATROL_BOAT)) {
-            int cnt = (int) ships.stream().filter(s -> s.getShipType().equals(PATROL_BOAT)).count();
-            return cnt >= 4;
+    private boolean isShipTypeExceedingLimit(ShipType shipType, Ship ship) {
+        switch (shipType) {
+            case AIRCRAFT_CARRIER:
+                return ships.contains(ship);
+            case BATTLESHIP: {
+                int cnt = (int) ships.stream().filter(s -> s.getShipType().equals(BATTLESHIP)).count();
+                return cnt >= 2;
+            }
+            case SUBMARINE: {
+                int cnt = (int) ships.stream().filter(s -> s.getShipType().equals(SUBMARINE)).count();
+                return cnt >= 3;
+            }
+            case PATROL_BOAT: {
+                int cnt = (int) ships.stream().filter(s -> s.getShipType().equals(PATROL_BOAT)).count();
+                return cnt >= 4;
+            }
         }
         return false;
     }

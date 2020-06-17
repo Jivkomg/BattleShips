@@ -14,7 +14,7 @@ public class Game {
     private GameState gameState = GameState.NOT_READY;
     private Map<String, Boolean> playerTurn = new HashMap<>();
 
-    GameState getGameState() {
+    public GameState getGameState() {
         return gameState;
     }
 
@@ -22,7 +22,7 @@ public class Game {
         this.gameState = gameState;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
@@ -38,7 +38,7 @@ public class Game {
         return boardByUsername;
     }
 
-    Set<String> getPlayers() {
+    public Set<String> getPlayers() {
         return boardByUsername.keySet();
     }
 
